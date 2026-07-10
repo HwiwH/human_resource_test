@@ -3,134 +3,324 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="GitHub Pages로 만든 간단한 반응형 웹사이트" />
-  <title>My Simple Page</title>
+  <meta name="description" content="직원 근무시간 관리 시스템 - 출퇴근 기록, 근무시간 계산, 휴가 관리" />
+  <meta name="keywords" content="근무시간, 출퇴근, 타임시트, 근무관리" />
+  <meta property="og:title" content="근무시간 관리 시스템" />
+  <meta property="og:description" content="직원 근무시간을 효율적으로 관리하세요" />
+  <meta property="og:type" content="website" />
+  
+  <title>근무시간 관리 시스템</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- 헤더 -->
   <header class="header">
-    <div class="container nav-wrap">
-      <a href="#home" class="logo">MY<span>PAGE</span></a>
+    <div class="container header-content">
+      <div class="header-top">
+        <a href="#home" class="logo">
+          <span class="logo-icon">⏱️</span>
+          <span class="logo-text">WorkTime</span>
+        </a>
+        
+        <button class="menu-button" id="menuButton" aria-label="메뉴 열기" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
 
-      <button class="menu-button" id="menuButton" aria-label="메뉴 열기" aria-expanded="false">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
-      <nav class="nav" id="navMenu">
-        <a href="#home">홈</a>
-        <a href="#about">소개</a>
-        <a href="#features">기능</a>
-        <a href="#contact">문의</a>
-      </nav>
+        <nav class="nav" id="navMenu">
+          <a href="#dashboard">대시보드</a>
+          <a href="#checkin">출퇴근</a>
+          <a href="#timesheet">근무기록</a>
+          <a href="#leave">휴가관리</a>
+          <a href="#reports">통계</a>
+        </nav>
+      </div>
+      
+      <div class="user-info">
+        <span class="user-name" id="userName">홍길동</span>
+        <button class="logout-btn" id="logoutBtn">로그아웃</button>
+      </div>
     </div>
   </header>
 
   <main>
-    <section class="hero" id="home">
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow">SIMPLE · RESPONSIVE · FREE</p>
-          <h1>
-            아이디어를 보여주는<br />
-            <span>심플한 웹페이지</span>
-          </h1>
-          <p class="hero-description">
-            GitHub Pages에서 무료로 운영할 수 있는 반응형 웹사이트입니다.
-            문구와 색상만 바꾸면 회사 소개, 프로젝트 안내, 포트폴리오 페이지로 활용할 수 있습니다.
-          </p>
-          <div class="hero-buttons">
-            <a href="#features" class="button primary">둘러보기</a>
-            <a href="#contact" class="button secondary">문의하기</a>
-          </div>
-        </div>
-
-        <div class="hero-visual" aria-hidden="true">
-          <div class="dashboard-card">
-            <div class="dashboard-top">
-              <span></span><span></span><span></span>
+    <!-- 대시보드 섹션 -->
+    <section class="section dashboard-section" id="dashboard">
+      <div class="container">
+        <h1>대시보드</h1>
+        
+        <div class="dashboard-grid">
+          <!-- 오늘의 근무 정보 -->
+          <div class="dashboard-card today-status">
+            <h2>오늘의 근무</h2>
+            <div class="status-display">
+              <div class="status-item">
+                <span class="status-label">출근시간</span>
+                <span class="status-value" id="checkinTime">--:--</span>
+              </div>
+              <div class="status-item">
+                <span class="status-label">퇴근시간</span>
+                <span class="status-value" id="checkoutTime">--:--</span>
+              </div>
+              <div class="status-item">
+                <span class="status-label">근무시간</span>
+                <span class="status-value" id="workingHours">0:00</span>
+              </div>
             </div>
-            <div class="dashboard-content">
-              <div class="mock-title"></div>
-              <div class="mock-text long"></div>
-              <div class="mock-text"></div>
-              <div class="mock-cards">
-                <div></div><div></div><div></div>
+            <div class="status-actions">
+              <button class="btn btn-primary" id="checkinBtn" aria-label="출근하기">출근</button>
+              <button class="btn btn-danger" id="checkoutBtn" aria-label="퇴근하기" disabled>퇴근</button>
+            </div>
+          </div>
+
+          <!-- 이주 근무시간 -->
+          <div class="dashboard-card weekly-summary">
+            <h2>이주 근무시간</h2>
+            <div class="weekly-stats">
+              <div class="stat-item">
+                <span class="stat-label">총 근무</span>
+                <span class="stat-value" id="weeklyTotal">0:00</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">목표</span>
+                <span class="stat-value">40:00</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" id="weeklyProgress" style="width: 0%"></div>
               </div>
             </div>
           </div>
-          <div class="floating-badge badge-one">✓ Responsive</div>
-          <div class="floating-badge badge-two">⚡ Fast</div>
+
+          <!-- 휴가 정보 -->
+          <div class="dashboard-card leave-info">
+            <h2>휴가 현황</h2>
+            <div class="leave-stats">
+              <div class="leave-item">
+                <span class="leave-type">연차</span>
+                <span class="leave-count"><span id="annualLeave">15</span>일</span>
+              </div>
+              <div class="leave-item">
+                <span class="leave-type">월차</span>
+                <span class="leave-count"><span id="monthlyLeave">2</span>일</span>
+              </div>
+              <div class="leave-item">
+                <span class="leave-type">병가</span>
+                <span class="leave-count"><span id="sickLeave">3</span>일</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 이번 달 근무 -->
+          <div class="dashboard-card monthly-summary">
+            <h2>이번 달 근무</h2>
+            <div class="monthly-stats">
+              <div class="stat-item">
+                <span class="stat-label">근무일</span>
+                <span class="stat-value" id="workingDays">20</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">휴무일</span>
+                <span class="stat-value" id="offDays">10</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section" id="about">
-      <div class="container split-section">
-        <div>
-          <p class="section-label">ABOUT</p>
-          <h2>복잡하지 않게,<br />필요한 내용만 담았습니다.</h2>
-        </div>
-        <p class="section-text">
-          별도의 서버나 데이터베이스 없이 운영되는 정적 웹사이트입니다.
-          파일을 GitHub 저장소에 업로드하고 Pages 기능을 활성화하면 바로 공개할 수 있습니다.
-          PC, 태블릿, 모바일 화면에 맞게 자동으로 레이아웃이 조정됩니다.
-        </p>
-      </div>
-    </section>
-
-    <section class="section light-section" id="features">
+    <!-- 출퇴근 섹션 -->
+    <section class="section checkin-section" id="checkin">
       <div class="container">
-        <div class="section-heading">
-          <p class="section-label">FEATURES</p>
-          <h2>간단하지만 꼭 필요한 기능</h2>
-          <p>처음 웹사이트를 만들 때 부담 없이 사용할 수 있도록 구성했습니다.</p>
-        </div>
+        <h2>출퇴근 기록</h2>
+        
+        <div class="checkin-content">
+          <div class="checkin-card">
+            <div class="current-time" id="currentTime">00:00:00</div>
+            <div class="current-date" id="currentDate">0000년 00월 00일</div>
+            
+            <div class="checkin-buttons">
+              <button class="btn btn-lg btn-primary" id="checkinLargeBtn" aria-label="출근하기">
+                <span class="btn-icon">📍</span>
+                <span>출근</span>
+              </button>
+              <button class="btn btn-lg btn-danger" id="checkoutLargeBtn" aria-label="퇴근하기" disabled>
+                <span class="btn-icon">🚪</span>
+                <span>퇴근</span>
+              </button>
+            </div>
+          </div>
 
-        <div class="feature-grid">
-          <article class="feature-card">
-            <div class="feature-icon">01</div>
-            <h3>반응형 디자인</h3>
-            <p>화면 크기에 따라 메뉴와 콘텐츠가 자연스럽게 배치됩니다.</p>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-icon">02</div>
-            <h3>쉬운 수정</h3>
-            <p>HTML의 문구와 CSS의 색상만 변경해도 원하는 분위기로 바꿀 수 있습니다.</p>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-icon">03</div>
-            <h3>무료 배포</h3>
-            <p>GitHub Pages를 사용해 별도의 웹호스팅 비용 없이 공개할 수 있습니다.</p>
-          </article>
+          <div class="checkin-history">
+            <h3>오늘의 기록</h3>
+            <div class="history-list" id="todayHistory">
+              <div class="empty-state">아직 기록이 없습니다.</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section contact-section" id="contact">
-      <div class="container contact-card">
-        <div>
-          <p class="section-label">CONTACT</p>
-          <h2>새로운 페이지를 시작해보세요.</h2>
-          <p>아래 버튼은 이메일 프로그램을 실행합니다. 이메일 주소는 index.html에서 변경할 수 있습니다.</p>
+    <!-- 근무기록 섹션 -->
+    <section class="section timesheet-section" id="timesheet">
+      <div class="container">
+        <h2>근무기록</h2>
+        
+        <div class="timesheet-controls">
+          <input type="month" id="monthPicker" class="month-picker" aria-label="조회 월 선택" />
+          <button class="btn btn-secondary" id="exportBtn">Excel 다운로드</button>
         </div>
-        <a href="mailto:hello@example.com" class="button white">이메일 보내기</a>
+
+        <div class="table-responsive">
+          <table class="timesheet-table" id="timesheetTable">
+            <thead>
+              <tr>
+                <th>날짜</th>
+                <th>요일</th>
+                <th>출근</th>
+                <th>퇴근</th>
+                <th>근무시간</th>
+                <th>상태</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody id="timesheetBody">
+              <!-- JavaScript에서 동적으로 생성 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 휴가 관리 섹션 -->
+    <section class="section leave-section" id="leave">
+      <div class="container">
+        <h2>휴가 관리</h2>
+        
+        <div class="leave-content">
+          <div class="leave-request-form">
+            <h3>휴가 신청</h3>
+            <form id="leaveForm">
+              <div class="form-group">
+                <label for="leaveType">휴가 종류</label>
+                <select id="leaveType" required>
+                  <option value="">선택하세요</option>
+                  <option value="annual">연차</option>
+                  <option value="monthly">월차</option>
+                  <option value="sick">병가</option>
+                  <option value="unpaid">무급휴가</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="leaveStartDate">시작일</label>
+                <input type="date" id="leaveStartDate" required />
+              </div>
+
+              <div class="form-group">
+                <label for="leaveEndDate">종료일</label>
+                <input type="date" id="leaveEndDate" required />
+              </div>
+
+              <div class="form-group">
+                <label for="leaveReason">사유</label>
+                <textarea id="leaveReason" rows="3" placeholder="휴가 사유를 입력하세요"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary">신청하기</button>
+            </form>
+          </div>
+
+          <div class="leave-list">
+            <h3>휴가 신청 내역</h3>
+            <div class="leave-items" id="leaveItems">
+              <div class="empty-state">신청 내역이 없습니다.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 통계 섹션 -->
+    <section class="section reports-section" id="reports">
+      <div class="container">
+        <h2>근무 통계</h2>
+        
+        <div class="reports-grid">
+          <div class="report-card">
+            <h3>월별 근무시간</h3>
+            <div class="chart-placeholder" id="monthlyChart">
+              <!-- Chart.js 또는 다른 라이브러리로 그래프 표시 -->
+              <canvas id="monthlyChartCanvas"></canvas>
+            </div>
+          </div>
+
+          <div class="report-card">
+            <h3>부서별 통계</h3>
+            <div class="chart-placeholder" id="departmentChart">
+              <canvas id="departmentChartCanvas"></canvas>
+            </div>
+          </div>
+
+          <div class="report-card">
+            <h3>연간 휴가 사용</h3>
+            <div class="leave-usage-stats">
+              <div class="usage-item">
+                <span class="usage-label">사용함</span>
+                <span class="usage-value" id="usedLeave">5</span>일
+              </div>
+              <div class="usage-item">
+                <span class="usage-label">남은 휴가</span>
+                <span class="usage-value" id="remainingLeave">10</span>일
+              </div>
+            </div>
+          </div>
+
+          <div class="report-card">
+            <h3>초과근무 현황</h3>
+            <div class="overtime-stats">
+              <div class="overtime-item">
+                <span class="overtime-label">총 초과근무</span>
+                <span class="overtime-value" id="totalOvertime">12:30</span>
+              </div>
+              <div class="overtime-item">
+                <span class="overtime-label">월평균</span>
+                <span class="overtime-value" id="avgOvertime">3:05</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 
+  <!-- 푸터 -->
   <footer class="footer">
-    <div class="container footer-inner">
-      <p>© <span id="currentYear"></span> MY PAGE. All rights reserved.</p>
-      <a href="#home">맨 위로 ↑</a>
+    <div class="container footer-content">
+      <p>&copy; <span id="currentYear"></span> WorkTime. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#" aria-label="개인정보처리방침">개인정보처리방침</a>
+        <a href="#" aria-label="이용약관">이용약관</a>
+        <a href="#" aria-label="고객지원">고객지원</a>
+      </div>
     </div>
   </footer>
+
+  <!-- 모달 -->
+  <div class="modal" id="confirmModal">
+    <div class="modal-content">
+      <h3 id="modalTitle">확인</h3>
+      <p id="modalMessage"></p>
+      <div class="modal-buttons">
+        <button class="btn btn-secondary" id="modalCancel">취소</button>
+        <button class="btn btn-primary" id="modalConfirm">확인</button>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
